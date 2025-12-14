@@ -27,6 +27,7 @@ public class PetFollower {
         entity.setInvulnerable(true);
         entity.setPersistent(false);
         entity.setSilent(true);
+        entity.setGravity(!type.isFloating());
         entity.setGravity(false);
         if (entity instanceof LivingEntity living) {
             living.setRemoveWhenFarAway(false);
@@ -44,6 +45,18 @@ public class PetFollower {
 
     public void tick(Player player) {
         if (entity == null || entity.isDead()) return;
+        Vector look = player.getLocation().getDirection().clone().setY(0).normalize();
+        if (look.lengthSquared() == 0) {
+            look = new Vector(0, 0, 1);
+        }
+        Vector right = look.clone().crossProduct(new Vector(0, 1, 0)).normalize().multiply(0.4);
+        Location target = player.getLocation().clone().add(look.clone().multiply(-1)).add(right).add(0, type.isBaby() ? 0.2 : 0, 0);
+
+        Vector offset = target.toVector().subtract(entity.getLocation().toVector());
+        if (offset.lengthSquared() > 9) {
+            entity.teleport(target);
+            return;
+        }
         Location target = player.getLocation().add(player.getLocation().getDirection().clone().multiply(-1)).add(0.5, 0, 0.5);
         Vector offset = target.toVector().subtract(entity.getLocation().toVector());
         entity.setVelocity(offset.multiply(0.3));

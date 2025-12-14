@@ -43,6 +43,8 @@ public class PetManager {
             player.sendMessage(plugin.prefix() + "You do not own this pet.");
             return;
         }
+        // clear previous state before applying a new pet
+        plugin.getAbilityManager().resetPassives(player);
         if (followers.containsKey(player.getUniqueId())) {
             followers.get(player.getUniqueId()).despawn();
         }
