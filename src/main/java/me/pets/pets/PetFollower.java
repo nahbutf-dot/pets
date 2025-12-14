@@ -28,6 +28,7 @@ public class PetFollower {
         entity.setPersistent(false);
         entity.setSilent(true);
         entity.setGravity(!type.isFloating());
+        entity.setGravity(false);
         if (entity instanceof LivingEntity living) {
             living.setRemoveWhenFarAway(false);
             living.setAI(false);
@@ -56,6 +57,8 @@ public class PetFollower {
             entity.teleport(target);
             return;
         }
+        Location target = player.getLocation().add(player.getLocation().getDirection().clone().multiply(-1)).add(0.5, 0, 0.5);
+        Vector offset = target.toVector().subtract(entity.getLocation().toVector());
         entity.setVelocity(offset.multiply(0.3));
     }
 
